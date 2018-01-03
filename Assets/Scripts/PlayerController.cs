@@ -32,11 +32,21 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate()
 	{
+#if UNITY_ANDROID
+		if (Input.touchCount > 0 &&
+			Input.GetTouch(0).phase == TouchPhase.Moved)
+		{
+			Vector2 delta = Input.GetTouch(0).deltaPosition;
+			Vector3 force = new Vector3(delta.x, 0, delta.y);
+			rb.AddForce(force * speed);
+		}
+#else
 		float inHorizontal = Input.GetAxis("Horizontal");
 		float inVertical = Input.GetAxis("Vertical");
 
 		Vector3 force = new Vector3(inHorizontal, 0, inVertical);
 		rb.AddForce(force * speed);
+#endif
 	}
 
 	void OnTriggerEnter(Collider other)
